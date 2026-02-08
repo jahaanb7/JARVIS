@@ -23,9 +23,12 @@ class JARVIS:
         
     def speech_to_text(self):
         with sr.Microphone() as microphone:
-            audio = self.recognizer.listen(microphone)
+            audio = self.recognizer.adjust_for_ambient_noise(microphone)
+            audio = self.recognizer.listen(microphone, 5, 30)
 
         text = self.recognizer.recognize_google(audio)
+
+        print(f"... {text}")
 
         return text
 
