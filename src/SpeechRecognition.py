@@ -10,6 +10,9 @@ class SpeechRecognition:
     self.timeLimit = 100
     self.phraseLimit = 7
 
+    self.recognizer.energy_threshold = 4000
+    self.recognizer.dynamic_energy_threshold = True
+
   def speech_to_text(self):
 
     # allow the file and module to access the microphone
@@ -29,7 +32,8 @@ class SpeechRecognition:
       return text
     
     except sr.UnknownValueError:
-      raise RuntimeError("Could not understand audio")
+      return None
 
     except sr.RequestError as error:
-        raise RuntimeError("Service isnt working; {0}".format(error))
+      print("Error:" + error)
+      return None
