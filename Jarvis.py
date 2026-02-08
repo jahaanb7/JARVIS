@@ -19,9 +19,11 @@ class JARVIS:
         self.recognizer = sr.Recognizer()
 
         #adjustable variables
-        self.timeLimit = 100
-        self.phraseLimit = 7
+        self.timeLimit = 1000
+        self.phraseLimit = 10
         self.ans_speed = 0.2
+
+        self.start_ans = ""
 
         #debug if the api_key returned null
         if not self.api_key:
@@ -29,7 +31,7 @@ class JARVIS:
         
     def clean_markdown(self, text):
 
-        # This part was done was Claude
+        # This part was done with Claude
 
         # Remove bold/italic markers
         text = re.sub(r'\*\*\*(.+?)\*\*\*', r'\1', text)  # bold+italic
@@ -37,22 +39,22 @@ class JARVIS:
         text = re.sub(r'\*(.+?)\*', r'\1', text)          # italic
         text = re.sub(r'__(.+?)__', r'\1', text)          # bold alt
         text = re.sub(r'_(.+?)_', r'\1', text)            # italic alt
-        
+
         # Convert headers to emphasized text
-        text = re.sub(r'^### (.+)$', r'\n\1:', flags=re.MULTILINE)
-        text = re.sub(r'^## (.+)$', r'\n\1:', flags=re.MULTILINE)
-        text = re.sub(r'^# (.+)$', r'\n\1:', flags=re.MULTILINE)
-        
+        text = re.sub(r'^### (.+)$', r'\n\1:', text, flags=re.MULTILINE)
+        text = re.sub(r'^## (.+)$', r'\n\1:', text, flags=re.MULTILINE)
+        text = re.sub(r'^# (.+)$', r'\n\1:', text, flags=re.MULTILINE)
+
         # Convert list items
-        text = re.sub(r'^\* ', r'  • ', flags=re.MULTILINE)
-        text = re.sub(r'^\- ', r'  • ', flags=re.MULTILINE)
-        
+        text = re.sub(r'^\* ', r'  • ', text, flags=re.MULTILINE)
+        text = re.sub(r'^\- ', r'  • ', text, flags=re.MULTILINE)
+
         # Clean up horizontal rules
-        text = re.sub(r'^---+$', r'', flags=re.MULTILINE)
-        
+        text = re.sub(r'^---+$', r'', text, flags=re.MULTILINE)
+
         # Remove extra blank lines (more than 2 in a row)
         text = re.sub(r'\n{3,}', '\n\n', text)
-        
+
         return text.strip()
         
     def speech_to_text(self):
@@ -117,5 +119,9 @@ class JARVIS:
                 time.sleep(self.ans_speed)  #delay in word by word
             print()
 
-jarvis1 = JARVIS()
-jarvis1.answer()
+    def run(self):
+        self.answer()
+
+
+jarvis = JARVIS()
+jarvis.run()
